@@ -8,10 +8,10 @@ terraform {
   required_version = ">= 1.0"
 
   backend "s3" {
-    bucket         = "rohit-kumarops"   # ← your bucket name
-    key            = "my-first-pipeline/terraform.tfstate"
-    region         = "us-east-2"
-    dynamodb_table = "terraform-state-lock"
-    encrypt        = true
+    bucket       = "rohit-kumarops"
+    key          = "my-first-pipeline/terraform.tfstate"
+    region       = "us-east-2"
+    encrypt      = true
+    use_lockfile = true
   }
 }
