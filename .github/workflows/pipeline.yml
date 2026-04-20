@@ -1,10 +1,32 @@
 name: Terraform CI/CD Pipeline
 
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      instance_name:
+        description: "EC2 Instance Name"
+        required: true
+        default: "my-server"
+      instance_type:
+        description: "Instance Type (t2.micro, t2.small, t2.medium)"
+        required: true
+        default: "t2.micro"
+      username:
+        description: "Username"
+        required: true
+        default: "rohit"
+      key_name:
+        description: "AWS Key Pair Name"
+        required: true
+        default: "rohit-test"
+      action:
+        description: "Terraform Action to run"
+        required: true
+        type: choice
+        options:
+          - plan
+          - apply
+          - destroy
 
 env:
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -14,7 +36,7 @@ env:
 jobs:
   terraform:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: 📥 Get the code
         uses: actions/checkout@v3
@@ -32,10 +54,30 @@ jobs:
 
       - name: 📋 Terraform Plan
         working-directory: terraform
-        run: terraform plan
+        if: ${{ github.event.inputs.action == 'plan' }}
+        run: |
+          terraform plan \
+            -var="instance_name=${{ github.event.inputs.instance_name }}" \
+            -var="instance_type=${{ github.event.inputs.instance_type }}" \
+            -var="key_name=${{ github.event.inputs.key_name }}" \
+            -var="username=${{ github.event.inputs.username }}"
 
       - name: 🚀 Terraform Apply
         working-directory: terraform
-        run: terraform apply -auto-approve
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        #this is for testing
+        if: ${{ github.event.inputs.action == 'apply' }}
+        run: |
+          terraform apply -auto-approve \
+            -var="instance_name=${{ github.event.inputs.instance_name }}" \
+            -var="instance_type=${{ github.event.inputs.instance_type }}" \
+            -var="key_name=${{ github.event.inputs.key_name }}" \
+            -var="username=${{ github.event.inputs.username }}"
+
+      - name: 💣 Terraform Destroy
+        working-directory: terraform
+        if: ${{ github.event.inputs.action == 'destroy' }}
+        run: |
+          terraform destroy -auto-approve \
+            -var="instance_name=${{ github.event.inputs.instance_name }}" \
+            -var="instance_type=${{ github.event.inputs.instance_type }}" \
+            -var="key_name=${{ github.event.inputs.key_name }}" \
+            -var="username=${{ github.event.inputs.username }}"
