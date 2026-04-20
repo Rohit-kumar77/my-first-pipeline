@@ -67,6 +67,7 @@ jobs:
         if: ${{ github.event.inputs.action == 'apply' }}
         run: |
           terraform apply -auto-approve \
+            -replace="aws_instance.my_server" \
             -var="instance_name=${{ github.event.inputs.instance_name }}" \
             -var="instance_type=${{ github.event.inputs.instance_type }}" \
             -var="key_name=${{ github.event.inputs.key_name }}" \
