@@ -72,7 +72,7 @@ jobs:
             -var="key_name=${{ github.event.inputs.key_name }}" \
             -var="username=${{ github.event.inputs.username }}" \
             -var="ami=ami-07062e2a343acc423" \
-            -var="region=us-east-2"
+            -var="aws_region=us-east-2"
 
       - name: 💣 Terraform Destroy
         working-directory: terraform
@@ -84,4 +84,4 @@ jobs:
             -var="key_name=${{ github.event.inputs.key_name }}" \
             -var="username=${{ github.event.inputs.username }}" \
             -var="ami=ami-07062e2a343acc423" \
-            -var="region=us-east-2"
+            -var="aws_region=us-east-2"
