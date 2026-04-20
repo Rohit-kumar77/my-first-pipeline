@@ -70,7 +70,9 @@ jobs:
             -var="instance_name=${{ github.event.inputs.instance_name }}" \
             -var="instance_type=${{ github.event.inputs.instance_type }}" \
             -var="key_name=${{ github.event.inputs.key_name }}" \
-            -var="username=${{ github.event.inputs.username }}"
+            -var="username=${{ github.event.inputs.username }}" \
+            -var="ami=ami-07062e2a343acc423" \
+            -var="region=us-east-2"
 
       - name: 💣 Terraform Destroy
         working-directory: terraform
@@ -80,4 +82,6 @@ jobs:
             -var="instance_name=${{ github.event.inputs.instance_name }}" \
             -var="instance_type=${{ github.event.inputs.instance_type }}" \
             -var="key_name=${{ github.event.inputs.key_name }}" \
-            -var="username=${{ github.event.inputs.username }}"
+            -var="username=${{ github.event.inputs.username }}" \
+            -var="ami=ami-07062e2a343acc423" \
+            -var="region=us-east-2"
